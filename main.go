@@ -8,13 +8,13 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/csrf"
+	"github.com/gofiber/fiber/v2/utils"
 	"github.com/gofiber/template/pug"
 	"golang.org/x/oauth2"
 )
 
 var (
-	state     = csrf.New()
+	state     = utils.UUID()
 	OauthConf *oauth2.Config
 )
 
