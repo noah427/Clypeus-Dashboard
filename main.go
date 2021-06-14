@@ -6,6 +6,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/utils"
@@ -16,6 +19,11 @@ import (
 var (
 	state     = utils.UUID()
 	OauthConf *oauth2.Config
+)
+
+var (
+	CLIENT_ID     string
+	CLIENT_SECRET string
 )
 
 func main() {
@@ -29,12 +37,17 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Render("index", fiber.Map{})
 	})
+
+	//load env
+	godotenv.Load()
+	CLIENT_ID = os.Getenv("CLIENT_ID")
+	CLIENT_SECRET = os.Getenv("CLIENT_SECRET")
 	authGroup := app.Group("/auth")
 	authGroup.Get("/login", func(c *fiber.Ctx) error {
 		OauthConf = &oauth2.Config{
 			RedirectURL:  "http://localhost:3000/auth/callback",
-			ClientID:     "",
-			ClientSecret: "",
+			ClientID:     CLIENT_ID,
+			ClientSecret: CLIENT_SECRET,
 			Scopes:       []string{"identify", "guilds"},
 			Endpoint: oauth2.Endpoint{
 				TokenURL: "https://discordapp.com/api/oauth2/token",
