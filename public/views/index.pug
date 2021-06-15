@@ -5,12 +5,16 @@ link(href='https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css', rel=
    title Clypeus Dashboard 
    body(id="background" style="height: 100%; width: 100%; position: fixed; z-index: -100;")
     header
-     p(class="font-mono" style="margin: 20px; text-align: center; font-size: 200px; font-weight: 900; color: #FF69B4;") Clypeus 
-      a(href="/dashboard")
-       div(style="text-align: center; vertical-align:middle;")
-        button(class="font-sans" style="background-color: #5539cc; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; border-radius: 20px; box-shadow: 10px 10px black;") Go To Dashboard
+     div(class="typewriter")
+      p(class="font-mono" style="margin: 20px; text-align: center; font-size: 200px; font-weight: 900; color: #FF69B4; text-shadow: 10px 10px black;") Clypeus
+       a(href="/dashboard")
+        div(style="text-align: center; vertical-align:middle;")
+         button(class="font-sans" style="background-color: #5539cc; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 20px; border-radius: 20px; box-shadow: 10px 10px black;") 
+          i(class="fab fa-discord")  Login with discord
+              
    script(src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js") 
-   script(src="https://cdn.jsdelivr.net/gh/tengbao/vanta@master/dist/vanta.net.min.js") 
+   script(src="https://cdn.jsdelivr.net/gh/tengbao/vanta@master/dist/vanta.net.min.js")
+   script(src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous')
    script(type="text/javascript").
     VANTA.NET({
     el: "#background",
@@ -23,3 +27,29 @@ link(href='https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css', rel=
     scaleMobile: 1.00,
     color: 0x00FFFF
     })
+   style(type="text/css").
+    body {
+    background: #333;
+    padding-top: 5em;
+    display: flex;
+    justify-content: center;
+    }
+    .typewriter p {
+    color: #fff;
+    overflow: hidden; /* Ensures the content is not revealed until the animation */
+    border-right: .15em solid orange; /* The typwriter cursor */
+    white-space: nowrap; /* Keeps the content on a single line */
+    margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+    letter-spacing: .10em; /* Adjust as needed */
+     animation: 
+     typing 3.5s steps(30, end),
+     blink-caret .5s step-end infinite;
+    }
+    @keyframes typing {
+    from { width: 0 }
+     to { width: 100% }
+    }
+    @keyframes blink-caret {
+     from, to { border-color: transparent }
+     50% { border-color: orange }
+    }
