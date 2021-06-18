@@ -35,8 +35,8 @@ func main() {
 	authGroup.Get("/login", func(c *fiber.Ctx) error {
 		OauthConf = &oauth2.Config{
 			RedirectURL:  "http://localhost:3000/auth/callback",
-			ClientID:     "781817418535403531",
-			ClientSecret: "MmY_uTCQ1iQJcNwMn8osdpu_WfSzQn8f",
+			ClientID:     "",
+			ClientSecret: "",
 			Scopes:       []string{"identify", "guilds"},
 			Endpoint: oauth2.Endpoint{
 				TokenURL: "https://discordapp.com/api/oauth2/token",
