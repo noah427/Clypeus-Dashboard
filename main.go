@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
+	"noah/clypeus-dashboard/structures"
 
 	"github.com/joho/godotenv"
 
@@ -31,8 +31,7 @@ func main() {
 	engine := pug.New("./public/views", ".pug")
 
 	app := fiber.New(fiber.Config{
-		DisableStartupMessage: true,
-		Views:                 engine,
+		Views: engine,
 	})
 
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -51,11 +50,14 @@ func main() {
 	loadDatabase()
 
 	authGroup := app.Group("/auth")
+	authGroup.Get("/", func(c *fiber.Ctx) error {
+		return c.Redirect("/auth/login")
+	})
 	authGroup.Get("/login", func(c *fiber.Ctx) error {
 		OauthConf = &oauth2.Config{
 			RedirectURL:  "http://localhost:3000/auth/callback",
-			ClientID:     CLIENT_ID,
-			ClientSecret: CLIENT_SECRET,
+			ClientID:     "",
+			ClientSecret: "",
 			Scopes:       []string{"identify", "guilds"},
 			Endpoint: oauth2.Endpoint{
 				TokenURL: "https://discordapp.com/api/oauth2/token",
@@ -63,7 +65,6 @@ func main() {
 			},
 		}
 		url := OauthConf.AuthCodeURL(state, oauth2.AccessTypeOnline)
-		url += "&prompt=none"
 		return c.Redirect(url, http.StatusTemporaryRedirect)
 	})
 	authGroup.Get("/callback", func(c *fiber.Ctx) error {
@@ -84,16 +85,23 @@ func main() {
 			return nil
 		}
 		defer res.Body.Close()
-		Reqbody, err := ioutil.ReadAll(res.Body)
+		body, err := ioutil.ReadAll(res.Body)
+
 		if err != nil {
-			c.SendStatus(http.StatusInternalServerError)
-			return nil
+			return c.SendStatus(http.StatusInternalServerError)
 		}
-		marshalled, err := json.Marshal(Reqbody)
+		err = json.Unmarshal(body, &structures.Data)
 		if err != nil {
-			log.Printf("Could not marshal data")
+			c.SendStatus(http.StatusBadRequest)
 		}
-		return c.JSONP(marshalled, "discord-data")
+		return c.Redirect("/dashboard")
+	})
+	dashboard := app.Group("/dashboard")
+	dashboard.Get("/", func(c *fiber.Ctx) error {
+		return c.Redirect("/dashboard/selector")
+	})
+	dashboard.Get("/selector", func(c *fiber.Ctx) error {
+		return c.Render("selector", fiber.Map{})
 	})
 	app.Static("/js", "./public/js")
 	app.Static("/fonts", "./public/fonts")
