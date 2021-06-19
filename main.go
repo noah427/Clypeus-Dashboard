@@ -26,6 +26,7 @@ var (
 	CLIENT_SECRET string
 )
 
+
 func main() {
 	engine := pug.New("./public/views", ".pug")
 
@@ -38,10 +39,17 @@ func main() {
 		return c.Render("index", fiber.Map{})
 	})
 
+	api := app.Group("/api")
+
+	declareApi(api)
+
 	//load env
 	godotenv.Load()
 	CLIENT_ID = os.Getenv("CLIENT_ID")
 	CLIENT_SECRET = os.Getenv("CLIENT_SECRET")
+
+	loadDatabase()
+
 	authGroup := app.Group("/auth")
 	authGroup.Get("/login", func(c *fiber.Ctx) error {
 		OauthConf = &oauth2.Config{
