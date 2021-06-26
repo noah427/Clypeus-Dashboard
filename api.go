@@ -1,19 +1,32 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 )
 
 func declareApi(api fiber.Router) {
 	api.Post("/guild/:id/settings", func(c *fiber.Ctx) error {
+		var err error
 		id := c.Params("id")
 		settings := &GuildSettings{}
-		c.BodyParser(settings)
-		fmt.Println(string(c.Body()))
+		err = c.BodyParser(settings)
+		if err != nil {
+			return err
+		}
 		settings.ID = id
-		fmt.Println(settings.AntinukeON)
+		db.Create(&settings)
+		return nil
+	})
+
+	api.Get("/guild/:id/settings", func(c *fiber.Ctx) error {
+		var err error
+		id := c.Params("id")
+		settings := &GuildSettings{ID: id}
+		db.Take(&settings)
+		err = c.JSON(settings)
+		if err != nil {
+			return err
+		}
 		return nil
 	})
 }

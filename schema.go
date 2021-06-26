@@ -1,9 +1,12 @@
 package main
 
+
 import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
+
+var db *gorm.DB
 
 type GuildSettings struct {
 	gorm.Model
@@ -22,7 +25,8 @@ type User struct {
 }
 
 func loadDatabase() {
-	db, err := gorm.Open(sqlite.Open("data.db"), &gorm.Config{})
+	var err error
+	db, err = gorm.Open(sqlite.Open("data.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
